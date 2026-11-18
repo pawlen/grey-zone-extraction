@@ -88,16 +88,6 @@
         "fire": "Fire",
         "death": "Death"
       }
-    },
-    "operator_hq": {
-      "model": "assets/models/character_vanguard.glb",
-      "targetHeight": 1.82,
-      "rotationY": 3.14159,
-      "clips": {
-        "idle": "Idle",
-        "walk": "Walk",
-        "run": "Run"
-      }
     }
   },
   "weapons": {

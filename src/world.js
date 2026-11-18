@@ -67,7 +67,7 @@ const THEMES = {
 
 const TERRAIN = {
   factory: {
-    amp: 2.6, scale: 0.019, boundaryAmp: 26, edgeStart: 0.90, urbanBias: 0.62,
+    amp: 2.6, scale: 0.019, boundaryAmp: 7, edgeStart: 0.93, urbanBias: 0.62,
     palette: {
       grass: [0x56624c, 0x4c5741, 0x616a52],
       dirt: [0x665a43, 0x5b503c, 0x71644a],
@@ -85,7 +85,7 @@ const TERRAIN = {
     },
   },
   port: {
-    amp: 1.9, scale: 0.017, boundaryAmp: 28, edgeStart: 0.90, urbanBias: 0.78,
+    amp: 1.9, scale: 0.017, boundaryAmp: 9, edgeStart: 0.93, urbanBias: 0.78,
     palette: {
       grass: [0x566149, 0x4e5a41, 0x616b51],
       dirt: [0x5f5a4b, 0x6a6452, 0x544f40],
@@ -112,7 +112,7 @@ const TERRAIN = {
     },
   },
   city: {
-    amp: 2.3, scale: 0.018, boundaryAmp: 32, edgeStart: 0.90, urbanBias: 0.82,
+    amp: 2.3, scale: 0.018, boundaryAmp: 10, edgeStart: 0.93, urbanBias: 0.82,
     palette: {
       grass: [0x505c46, 0x59664d, 0x47523e],
       dirt: [0x5e594c, 0x6a6456, 0x524d42],
@@ -646,7 +646,7 @@ export class World {
 
   buildTerrainMesh() {
     const size = this.map.size * 1.5;
-    const seg = Math.min(150, Math.max(64, Math.floor(this.map.size / 2.1)));
+    const seg = Math.min(230, Math.max(80, Math.floor(this.map.size / 2.5)));
     const geo = new THREE.PlaneGeometry(size, size, seg, seg);
     geo.rotateX(-Math.PI / 2);
     const pos = geo.attributes.position;
@@ -817,14 +817,16 @@ export class World {
       }
     }
 
+    const naturalTheme = ['forest', 'snow', 'farm'].includes(this.map.theme);
+
     // 边界岩石沿方形地图四条边布置（而不是圆形，避免侵入边缘出生点）
     const edge = this.half * 0.985;
-    const perEdge = 15;
+    const perEdge = Math.max(15, Math.ceil(this.map.size / 20));
     const spots = [];
     for (const side of ['n', 's', 'e', 'w']) {
       for (let i = 0; i < perEdge; i++) {
         const t = -this.half * 0.96 + ((i + 0.4) / perEdge) * this.half * 1.92;
-        const out = this.half * (1.01 + this.rng() * 0.05);
+        const out = this.half * (naturalTheme ? (1.01 + this.rng() * 0.05) : (1.075 + this.rng() * 0.06));
         let x, z;
         if (side === 'n') { x = t; z = -out; }
         else if (side === 's') { x = t; z = out; }
@@ -838,9 +840,10 @@ export class World {
       }
     }
     for (const p of spots) {
-      const sx = randRange(this.rng, 9, 22);
-      const sy = randRange(this.rng, 10, 26);
-      const sz = randRange(this.rng, 7, 16);
+      const sizeMul = naturalTheme ? 1 : 0.62;
+      const sx = randRange(this.rng, 9, 22) * sizeMul;
+      const sy = randRange(this.rng, 10, 26) * sizeMul;
+      const sz = randRange(this.rng, 7, 16) * sizeMul;
       const mesh = new THREE.Mesh(cliffGeo, this.rng() < 0.5 ? cliffMat : cliffMatDark);
       mesh.position.set(p.x, this.heightAt(p.x, p.z) + sy * 0.08, p.z);
       mesh.scale.set(sx, sy, sz);
@@ -861,10 +864,14 @@ export class World {
       this.hittables.push(m2);
     }
 
+    const isNatural = naturalTheme;
+    if (!isNatural) {
+      this.buildIndustrialBoundary(cliffGeo, cliffMat, cliffMatDark);
+      return;
+    }
     // 内圈可见屏障：与物理边界基本贴合，玩家先撞到看得见的岩壁/围墙
     const inner = this.half * 0.984;
-    const barrierCount = Math.ceil(this.map.size / 7);
-    const isNatural = ['forest', 'snow', 'farm'].includes(this.map.theme);
+    const barrierCount = Math.ceil(this.map.size / 8);
     for (const side of ['n', 's', 'e', 'w']) {
       for (let i = 0; i < barrierCount; i++) {
         const t = -this.half * 0.99 + ((i + 0.5) / barrierCount) * this.half * 1.98;
@@ -905,8 +912,8 @@ export class World {
 
     // 连续可见边界墙：贴着物理边界内缘，玩家会先看到并撞到它
     const wallLine = this.half - 2.4;
-    const wallCount = Math.ceil(this.map.size / 7.5);
-    const naturalWall = ['forest', 'snow', 'farm'].includes(this.map.theme);
+    const wallCount = Math.ceil(this.map.size / 8);
+    const naturalWall = true;
     for (const side of ['n', 's', 'e', 'w']) {
       for (let i = 0; i < wallCount; i++) {
         const t = -this.half * 0.985 + ((i + 0.5) / wallCount) * this.half * 1.97;
@@ -945,11 +952,11 @@ export class World {
       }
     }
 
-    // 主题边界：树线或高墙，遮挡不可见边界
-    const treeLine = ['forest', 'snow', 'farm'].includes(this.map.theme);
+    // 主题边界：树线
+    const treeLine = true;
     if (treeLine) {
       const inset = this.half * 0.935;
-      const perSide = 28;
+      const perSide = Math.max(28, Math.ceil(this.map.size / 18));
       for (const side of ['n', 's', 'e', 'w']) {
         for (let i = 0; i < perSide; i++) {
           const t = -this.half * 0.94 + ((i + 0.5) / perSide) * this.half * 1.88;
@@ -975,27 +982,163 @@ export class World {
           }
         }
       }
-    } else {
-      const wallMat = new THREE.MeshStandardMaterial({ map: rockTex, color: 0x575b5b, roughness: 0.95, metalness: 0.04 });
-      const inset = this.half * 0.992;
-      const perSide = 12;
-      for (const side of ['n', 's', 'e', 'w']) {
-        for (let i = 0; i < perSide; i++) {
-          const t = -this.half * 0.92 + ((i + 0.5) / perSide) * this.half * 1.84;
-          let x, z;
-          if (side === 'n') { x = t; z = -inset; }
-          else if (side === 's') { x = t; z = inset; }
-          else if (side === 'e') { x = inset; z = t; }
-          else { x = -inset; z = t; }
-          if (this.map.spawns.some((k) => dist(x, z, k.x, k.z) < 26) || this.map.extracts.some((k) => dist(x, z, k.x, k.z) < 26)) continue;
-          const w = randRange(this.rng, 14, 32);
-          const hh = randRange(this.rng, 10, 24);
-          const mesh = new THREE.Mesh(new THREE.BoxGeometry(w, hh, 2.6), wallMat);
-          mesh.position.set(x, this.heightAt(x, z) + hh / 2 - 1, z);
-          mesh.rotation.y = (side === 'n' || side === 's') ? Math.PI / 2 : 0;
-          this.group.add(mesh);
-          this.hittables.push(mesh);
+    }
+  }
+
+  makeChainLinkTexture() {
+    if (this._chainLinkTex) return this._chainLinkTex;
+    const c = document.createElement('canvas');
+    c.width = c.height = 128;
+    const ctx = c.getContext('2d');
+    ctx.clearRect(0, 0, 128, 128);
+    ctx.strokeStyle = 'rgba(150, 160, 165, 0.9)';
+    ctx.lineWidth = 2;
+    for (let i = -128; i < 256; i += 16) {
+      ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i + 128, 128); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(i + 128, 0); ctx.lineTo(i, 128); ctx.stroke();
+    }
+    const tex = new THREE.CanvasTexture(c);
+    tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+    tex.repeat.set(3, 1);
+    this._chainLinkTex = tex;
+    return tex;
+  }
+
+  /** 工业/港口/城区边界：围栏 + 外侧仓库/集装箱/废墟天际线，替代生硬的方盒子墙。 */
+  buildIndustrialBoundary(cliffGeo, cliffMat, cliffMatDark) {
+    const theme = this.map.theme;
+    const half = this.half;
+    const fenceMat = new THREE.MeshStandardMaterial({
+      map: this.makeChainLinkTexture(), transparent: true, alphaTest: 0.25,
+      side: THREE.DoubleSide, roughness: 0.8, metalness: 0.3, depthWrite: false,
+    });
+    const postMat = new THREE.MeshStandardMaterial({ color: 0x4b5155, roughness: 0.6, metalness: 0.5 });
+    const segLen = 12;
+    const line = half - 0.9;
+    const count = Math.ceil(this.map.size / segLen);
+    const industrialColor = 0x3c4245;
+    const sides = ['n', 's', 'e', 'w'];
+    const along = (i) => -half * 0.985 + ((i + 0.5) / count) * half * 1.97;
+    const posFor = (side, t, inset) => {
+      if (side === 'n') return { x: t, z: -inset };
+      if (side === 's') return { x: t, z: inset };
+      if (side === 'e') return { x: inset, z: t };
+      return { x: -inset, z: t };
+    };
+    const nearKey = (x, z, r = 16) => this.map.spawns.some((k) => dist(x, z, k.x, k.z) < r)
+      || this.map.extracts.some((k) => dist(x, z, k.x, k.z) < r);
+
+    for (const side of sides) {
+      for (let i = 0; i < count; i++) {
+        const t = along(i);
+        const p = posFor(side, t, line);
+        if (nearKey(p.x, p.z, 8)) continue;
+        const y = this.heightAt(p.x, p.z);
+
+        // 内侧低矮混凝土路障/碎石，提供近景层次
+        if (i % 3 === 0) {
+          const bw = randRange(this.rng, 2.2, 3.4);
+          const bh = randRange(this.rng, 0.8, 1.2);
+          this.addBox(p.x, p.z, bw, 1.2, bh, 0x6b6f6e, { collide: false, hittable: false });
+          if (theme === 'city') {
+            for (let k = 0; k < 3; k++) {
+              this.addBox(p.x + randRange(this.rng, -2, 2), p.z + randRange(this.rng, -2, 2), 1.2, 1.2, 0.8, 0x5a5c57, { collide: false, hittable: false });
+            }
+          }
         }
+
+        // 围栏：立柱 + 半透明菱形网
+        const post = new THREE.Mesh(new THREE.BoxGeometry(0.12, 3.2, 0.12), postMat);
+        post.position.set(p.x, y + 1.6, p.z);
+        post.castShadow = true;
+        this.group.add(post);
+        this.hittables.push(post);
+        const rail = new THREE.Mesh(new THREE.BoxGeometry(segLen * 0.98, 0.06, 0.06), postMat);
+        if (side === 'n' || side === 's') {
+          rail.position.set(p.x, y + 3.1, p.z);
+        } else {
+          rail.rotation.y = Math.PI / 2;
+          rail.position.set(p.x, y + 3.1, p.z);
+        }
+        this.group.add(rail);
+        const fence = new THREE.Mesh(new THREE.PlaneGeometry(segLen * 0.97, 3.0), fenceMat);
+        if (side === 'n' || side === 's') {
+          fence.position.set(p.x, y + 1.55, p.z);
+        } else {
+          fence.rotation.y = Math.PI / 2;
+          fence.position.set(p.x, y + 1.55, p.z);
+        }
+        this.group.add(fence);
+        if (side === 'n' || side === 's') {
+          this.colliders.push({ minX: p.x - segLen / 2, maxX: p.x + segLen / 2, minZ: p.z - 0.15, maxZ: p.z + 0.15, h: 3.2, top: 3.2, y0: 0 });
+        } else {
+          this.colliders.push({ minX: p.x - 0.15, maxX: p.x + 0.15, minZ: p.z - segLen / 2, maxZ: p.z + segLen / 2, h: 3.2, top: 3.2, y0: 0 });
+        }
+
+        // 外侧主题天际线：仓库 / 集装箱 / 废墟楼
+        if (i % 2 === 1) {
+          const out = half + randRange(this.rng, 2, 10);
+          const q = posFor(side, t + randRange(this.rng, -4, 4), out);
+          const gy = this.heightAt(q.x, q.z);
+          const rot = (side === 'n' || side === 's') ? 0 : Math.PI / 2;
+          if (theme === 'factory') {
+            if (i % 6 === 1) {
+              const hh = randRange(this.rng, 7, 14);
+              this.addBox(q.x, q.z, randRange(this.rng, 14, 26), randRange(this.rng, 8, 13), hh, industrialColor, { y0: 0, collide: false });
+            } else if (i % 6 === 3) {
+              this.addShipContainer(q.x, q.z, 0x6d4a32, false);
+              this.addBox(q.x, q.z, 6.0, 2.6, 2.6, 0x40525a, { y0: 2.6, collide: false });
+            } else {
+              const hh = randRange(this.rng, 3, 7);
+              this.addBox(q.x, q.z, randRange(this.rng, 5, 10), randRange(this.rng, 4, 8), hh, 0x51565a, { collide: false });
+              this.addCylinder(q.x + randRange(this.rng, -8, 8), q.z + randRange(this.rng, -6, 6), randRange(this.rng, 1.2, 2.0), randRange(this.rng, 10, 24), 0x34393c, { segments: 10, collide: false });
+            }
+          } else if (theme === 'port') {
+            const stack = i % 6 === 1 ? 3 : 2;
+            const colors = [0x6d4a32, 0x3f5c4b, 0x4a5560, 0x6e5f3c];
+            for (let k = 0; k < stack; k++) {
+              this.addBox(q.x, q.z, 6.0, 2.6, 2.6, pick(this.rng, colors), { y0: k * 2.6, collide: false });
+            }
+            if (i % 8 === 3) this.addCylinder(q.x + 10, q.z + 4, 0.8, 24, 0x7b5b24, { segments: 8, collide: false });
+          } else {
+            // city：残破楼体 + 窗户 + 瓦砾
+            const w = randRange(this.rng, 10, 18);
+            const d = randRange(this.rng, 8, 12);
+            const hh = randRange(this.rng, 7, 18);
+            this.addBox(q.x, q.z, w, d, hh, 0x4b4d49, { collide: false });
+            for (let wy = 0; wy < Math.floor(hh / 3); wy++) {
+              for (let wx = -1; wx <= 1; wx++) {
+                this.addBox(q.x + wx * (w * 0.24), q.z, 1.4, 0.1, 1.6, 0x14181b, {
+                  y0: 2 + wy * 3, collide: false, hittable: false,
+                });
+              }
+            }
+            if (i % 4 === 1) {
+              for (let k = 0; k < 4; k++) {
+                this.addBox(q.x + randRange(this.rng, -6, 6), q.z - 4 + randRange(this.rng, 0, 3), 1.6, 1.2, 0.7, 0x5a5c57, { collide: false, hittable: false });
+              }
+            }
+          }
+        }
+      }
+    }
+
+    // 四角瞭望塔/地标
+    for (const [sx, sz] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) {
+      const x = sx * (half + 8);
+      const z = sz * (half + 8);
+      const y = this.heightAt(x, z);
+      if (theme === 'city') {
+        this.addBox(x, z, 18, 14, 18, 0x444743, { collide: false });
+        this.addBox(x, z, 14, 10, 12, 0x3d3f3b, { y0: 18, collide: false });
+      } else {
+        for (const px of [-2.2, 2.2]) {
+          for (const pz of [-2.2, 2.2]) {
+            this.addCylinder(x + px, z + pz, 0.22, 13, 0x40372a, { segments: 8, collide: false });
+          }
+        }
+        this.addBox(x, z, 6.6, 6.0, 0.6, 0x4a3f2b, { y0: 12.6, collide: false });
+        this.addBox(x, z, 5.2, 4.6, 2.6, 0x3b3225, { y0: 13.2, collide: false });
       }
     }
   }
@@ -1469,9 +1612,11 @@ export class World {
   buildVegetation() {
     // 灌木（实例化）
     const theme = this.map.theme;
-    const bushCount = {
+    const bushBase = {
       forest: 260, farm: 300, snow: 90, city: 100, port: 110, factory: 90,
     }[theme] || 120;
+    const areaScale = Math.pow(this.map.size / 300, 1.35);
+    const bushCount = Math.round(bushBase * Math.max(1, areaScale));
     const bushMat = new THREE.MeshStandardMaterial({ map: this.makeFoliageTexture('broadleaf', 1), alphaTest: 0.35, side: THREE.DoubleSide, roughness: 1, metalness: 0, emissive: 0x0c140c, emissiveIntensity: 0.3 });
     const bushes = new THREE.InstancedMesh(this.bushGeo, bushMat, bushCount);
     bushes.frustumCulled = false;
@@ -1505,7 +1650,7 @@ export class World {
 
     // 小区域死树
     if (['city', 'port', 'factory'].includes(theme)) {
-      const deadCount = theme === 'city' ? 18 : 10;
+      const deadCount = Math.round((theme === 'city' ? 18 : 10) * Math.max(1, Math.pow(this.map.size / 300, 1.2)));
       for (let i = 0; i < deadCount * 3 && i < deadCount * 3; i++) {
         const x = randRange(this.rng, -this.half * 0.88, this.half * 0.88);
         const z = randRange(this.rng, -this.half * 0.88, this.half * 0.88);
@@ -1709,16 +1854,190 @@ export class World {
   // ────────── 地图布局 ──────────
 
   buildLayout() {
-    const id = this.mapId;
-    if (id === 'factory') this.layoutFactory();
-    else if (id === 'forest') this.layoutForest();
-    else if (id === 'port') this.layoutPort();
-    else if (id === 'snow') this.layoutSnow();
-    else if (id === 'farm') this.layoutFarm();
-    else this.layoutCity();
-
+    const draw = () => {
+      const id = this.mapId;
+      if (id === 'factory') this.layoutFactory();
+      else if (id === 'forest') this.layoutForest();
+      else if (id === 'port') this.layoutPort();
+      else if (id === 'snow') this.layoutSnow();
+      else if (id === 'farm') this.layoutFarm();
+      else this.layoutCity();
+    };
+    draw();
+    // 5 倍面积：中心保留原标志性布局，四向复制并偏移，形成外围设施群
+    this.buildLayoutCopies(draw);
+    this.buildOuterLandmarks();
     // 通用杂物
     this.scatterProps();
+  }
+
+  /** 将当前主题布局再生成四份并平移到外围，填充扩大后的地图。 */
+  buildLayoutCopies(draw) {
+    const offset = this.half * 0.56;
+    const copies = [
+      { dx: offset, dz: 0, tag: '东区' },
+      { dx: -offset, dz: 0, tag: '西区' },
+      { dx: 0, dz: offset, tag: '南区' },
+      { dx: 0, dz: -offset, tag: '北区' },
+    ];
+    for (const copy of copies) {
+      const startChildren = this.group.children.length;
+      const startColliders = this.colliders.length;
+      const startZones = this.zones.length;
+      const startStructures = this.structureZones.length;
+      const startFlatten = this.flattenZones.length;
+      const startScene = this.scene.children.length;
+
+      draw();
+
+      const moved = [];
+      for (let i = startChildren; i < this.group.children.length; i++) {
+        const obj = this.group.children[i];
+        const ox = obj.position.x;
+        const oz = obj.position.z;
+        const og = this.heightAt(ox, oz);
+        obj.position.x = ox + copy.dx;
+        obj.position.z = oz + copy.dz;
+        moved.push([obj, og]);
+      }
+      for (let i = startColliders; i < this.colliders.length; i++) {
+        const c = this.colliders[i];
+        c.minX += copy.dx; c.maxX += copy.dx;
+        c.minZ += copy.dz; c.maxZ += copy.dz;
+      }
+      for (let i = startStructures; i < this.structureZones.length; i++) {
+        const b = this.structureZones[i];
+        b.minX += copy.dx; b.maxX += copy.dx;
+        b.minZ += copy.dz; b.maxZ += copy.dz;
+      }
+      for (let i = startFlatten; i < this.flattenZones.length; i++) {
+        const f = this.flattenZones[i];
+        f.x += copy.dx; f.z += copy.dz;
+      }
+      for (let i = startZones; i < this.zones.length; i++) {
+        const z = this.zones[i];
+        z.x += copy.dx; z.z += copy.dz;
+        z.name += ' · ' + copy.tag;
+      }
+      // 场景直属灯光等对象
+      const movedScene = [];
+      for (let i = startScene; i < this.scene.children.length; i++) {
+        const obj = this.scene.children[i];
+        if (obj === this.group || obj === this.sky || !obj.position) continue;
+        const ox = obj.position.x, oz = obj.position.z;
+        const og = this.heightAt(ox, oz);
+        obj.position.x = ox + copy.dx;
+        obj.position.z = oz + copy.dz;
+        movedScene.push([obj, og]);
+      }
+      // 地形被新的平整区覆盖后，修正外围物体的高度
+      for (const [obj, og] of moved) {
+        const ng = this.heightAt(obj.position.x, obj.position.z);
+        obj.position.y += ng - og;
+      }
+      for (const [obj, og] of movedScene) {
+        const ng = this.heightAt(obj.position.x, obj.position.z);
+        obj.position.y += ng - og;
+      }
+      // 新增加的命中对象若是 group 直属，位置已同步移动；无需额外处理
+    }
+  }
+
+  /** 每个主题在扩大的外围加一处标志性建筑，避免“只有大”。 */
+  buildOuterLandmarks() {
+    const q = this.half * 0.62;
+    const id = this.mapId;
+    if (id === 'factory') {
+      this.addBuilding(-q, -q, 26, 18, 9, { doors: ['e', 's'], color: 0x3d4346 });
+      this.addCylinder(-q - 18, -q, 2.2, 22, 0x2f3436, { segments: 14 });
+      this.addCylinder(-q - 9, -q - 8, 1.8, 17, 0x343a3d, { segments: 12 });
+      for (let i = 0; i < 4; i++) this.addCrateStack(-q + 8 + i * 4, -q + 14, 1.1);
+      this.addResourceZone(-q, -q, 30, '北部重工厂', 'high', 10);
+    } else if (id === 'forest') {
+      this.addFireLookout(-q, q * 0.9);
+      this.addResourceZone(-q, q * 0.9, 26, '防火瞭望塔', 'high', 8);
+      this.addBuilding(q * 0.9, -q, 16, 12, 3.4, { color: 0x463a2b, doors: ['w', 'n'] });
+      this.addResourceZone(q * 0.9, -q, 20, '伐木站', 'mid', 6);
+    } else if (id === 'port') {
+      this.addGantryCrane(-q, q);
+      this.addResourceZone(-q, q, 28, '龙门吊区', 'high', 9);
+      this.addBuilding(q, -q * 0.8, 30, 16, 8, { doors: ['w', 's'], color: 0x3a4146 });
+      this.addResourceZone(q, -q * 0.8, 24, '港区三号库', 'high', 8);
+      for (let i = 0; i < 8; i++) {
+        this.addShipContainer(q * 0.55 + (i % 4) * 7, -q - 8 + Math.floor(i / 4) * 4, 0x6d4a32, i % 2 === 0);
+      }
+    } else if (id === 'snow') {
+      this.addRadarStation(q, -q);
+      this.addResourceZone(q, -q, 28, '雷达站', 'high', 9);
+      this.addBunker(-q, q * 0.8);
+      this.addResourceZone(-q, q * 0.8, 24, '地下掩体', 'mid', 7);
+    } else if (id === 'farm') {
+      this.addWindmill(q * 0.85, -q);
+      this.addBuilding(-q, -q * 0.85, 24, 14, 4.2, { color: 0x5a4632, doors: ['e', 'n'] });
+      this.addResourceZone(q * 0.85, -q, 24, '西风车', 'mid', 6);
+      this.addResourceZone(-q, -q * 0.85, 26, '河谷仓房', 'high', 8);
+      this.addFenceLine(-q, -q * 0.85 + 16, -q + 30, -q * 0.85 + 16);
+    } else {
+      this.addOverpass(-q, q);
+      this.addResourceZone(-q, q, 30, '断桥公路', 'high', 9);
+      this.addBuilding(q, -q, 28, 20, 12, { doors: ['w', 's'], color: 0x4b4d4a });
+      this.addResourceZone(q, -q, 26, '废弃公寓', 'high', 8);
+    }
+  }
+
+  addFireLookout(x, z) {
+    const base = this.heightAt(x, z);
+    for (const sx of [-1, 1]) {
+      for (const sz of [-1, 1]) {
+        this.addCylinder(x + sx * 2.4, z + sz * 2.4, 0.22, 9, 0x3a3226, { segments: 8, y0: 0 });
+      }
+    }
+    this.addBox(x, z, 6.4, 5.4, 0.5, 0x4a3b29, { y0: 8.8 });
+    this.addBox(x, z, 6.8, 5.8, 0.2, 0x2e2a22, { y0: 9.3, collide: false });
+    this.addBox(x, z, 4.4, 3.4, 2.6, 0x3f3324, { y0: 9.5, collide: false });
+    this.addBox(x, z, 5.0, 4.0, 0.3, 0x2b2921, { y0: 12.0, collide: false });
+    this.addCylinder(x, z, 0.12, 2.6, 0x24221d, { segments: 6, y0: 12.2 });
+    this.colliders.push({ minX: x - 3.2, maxX: x + 3.2, minZ: z - 2.8, maxZ: z + 2.8, h: 9, top: 9, y0: 0 });
+  }
+
+  addGantryCrane(x, z) {
+    for (const sx of [-1, 1]) {
+      this.addCylinder(x + sx * 9, z - 4, 0.65, 26, 0x7b5b24, { segments: 10 });
+      this.addCylinder(x + sx * 9, z + 4, 0.55, 24, 0x6d5120, { segments: 10 });
+    }
+    this.addBox(x, z, 24, 3.0, 2.0, 0x8a6a2c, { y0: 23 });
+    this.addBox(x - 2, z, 12, 2.0, 2.2, 0x6d5120, { y0: 24.6, collide: false });
+    this.addBox(x + 8, z, 4, 5, 4, 0x3b3f42, { y0: 18, collide: false });
+    this.colliders.push({ minX: x - 10, maxX: x + 10, minZ: z - 5, maxZ: z + 5, h: 2, top: 2, y0: 0 });
+  }
+
+  addRadarStation(x, z) {
+    this.addBox(x, z, 18, 14, 4.2, 0x6b7072, { color: 0x6b7072 });
+    this.addCylinder(x, z, 4.2, 4.0, 0x505659, { segments: 16, y0: 4.2 });
+    const dome = new THREE.Mesh(new THREE.SphereGeometry(3.4, 20, 12, 0, Math.PI * 2, 0, Math.PI * 0.55), this.mat(0x8a9596));
+    dome.position.set(x, this.heightAt(x, z) + 7.6, z);
+    dome.castShadow = true;
+    this.group.add(dome);
+    this.hittables.push(dome);
+    this.addCylinder(x + 1.5, z + 5, 0.12, 10, 0x2a2d2e, { segments: 6, y0: 4.2 });
+    this.colliders.push({ minX: x - 9, maxX: x + 9, minZ: z - 7, maxZ: z + 7, h: 7, top: 7, y0: 0 });
+  }
+
+  addBunker(x, z) {
+    this.addBox(x, z, 16, 10, 3.4, 0x5a5e58, { color: 0x5a5e58 });
+    this.addBox(x, z, 10, 7, 1.2, 0x454a46, { y0: 3.4, collide: false });
+    this.addBox(x - 5, z - 5.2, 2.2, 0.5, 2.2, 0x1a1c1b, { y0: 0.2, collide: false });
+    this.colliders.push({ minX: x - 8, maxX: x + 8, minZ: z - 5, maxZ: z + 5, h: 3.4, top: 3.4, y0: 0 });
+  }
+
+  addOverpass(x, z) {
+    for (let i = -2; i <= 2; i++) {
+      this.addCylinder(x + i * 8, z, 1.0, 7, 0x5b5c58, { segments: 10 });
+      this.addBox(x + i * 8, z, 2.4, 2.4, 0.6, 0x6a6b64, { y0: 7, collide: false });
+    }
+    this.addBox(x, z, 42, 8, 1.2, 0x4f514d, { y0: 7 });
+    this.addBox(x, z + 3.3, 42, 0.5, 1.1, 0x3e403d, { y0: 8.2, collide: false });
+    this.colliders.push({ minX: x - 21, maxX: x + 21, minZ: z - 4, maxZ: z + 4, h: 7, top: 7, y0: 0 });
   }
 
   layoutFactory() {
@@ -2005,7 +2324,8 @@ export class World {
     const inField = (x, z) => fields.some(([cx, cz, w, d]) => Math.abs(x - cx) < w / 2 + 2 && Math.abs(z - cz) < d / 2 + 2);
     let trees = 0;
     let attempts = 0;
-    while (trees < 54 && attempts < 400) {
+    const farmTreeTarget = Math.round(54 * Math.max(1, Math.pow(this.map.size / 300, 1.3)));
+    while (trees < farmTreeTarget && attempts < 400 * 3) {
       attempts++;
       const x = randRange(this.rng, -this.half + 8, this.half - 8);
       const z = randRange(this.rng, -this.half + 8, this.half - 8);

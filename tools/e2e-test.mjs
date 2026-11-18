@@ -153,7 +153,7 @@ try {
   check('弹挂已装备且含物资', init.rig === 'rig_small' && init.rigItems >= 2, `${init.rig} / ${init.rigItems} 件`);
   check('资源点分级与高价值物资生成', init.zones >= 5 && init.highZones >= 1 && init.highContainers > 0, `${init.zones} 区域 / ${init.highZones} 高级 / ${init.highContainers} 高级容器`);
   check('敌人区分守卫与巡逻队并使用骨骼蒙皮动画', init.guards > 0 && init.patrols > 0 && init.rigged, `守卫${init.guards} 巡逻${init.patrols}`);
-  check('地图生成敌人与容器', init.enemies === 7 && init.containers >= 28, `敌人${init.enemies} 容器${init.containers}`);
+  check('地图生成敌人与容器', init.enemies >= 10 && init.containers >= 40, `敌人${init.enemies} 容器${init.containers}`);
   check('撤离点数量正确', init.extracts === 3);
   check('导航网格存在且可通行', init.hasNav && init.navFree);
   check('HUD 可见且无启动错误', init.hudVisible && !init.bootError);
@@ -547,7 +547,7 @@ try {
     return { visible, entries, latest, menuBtn, closed: document.getElementById('overlay-announcement').classList.contains('hidden') };
   })()`);
   console.log('公告:', JSON.stringify(announce));
-  check('主菜单公告板可打开并展示全部版本', announce.visible && announce.entries >= 13 && announce.latest === 'v1.13');
+  check('主菜单公告板可打开并展示全部版本', announce.visible && announce.entries >= 14 && announce.latest === 'v1.14');
   check('公告入口在主菜单且可关闭', announce.menuBtn && announce.closed);
 
   const bootAfter = await evaluate("!document.getElementById('boot-error').classList.contains('hidden') ? document.getElementById('boot-error').textContent.slice(0, 300) : ''");

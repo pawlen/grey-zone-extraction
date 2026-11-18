@@ -570,7 +570,7 @@ class Game {
 
     // 场景
     this.scene = new THREE.Scene();
-    this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.05, 420);
+    this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.05, 1100);
     if (this.renderPass) {
       this.renderPass.scene = this.scene;
       this.renderPass.camera = this.camera;
@@ -586,7 +586,13 @@ class Game {
 
     const seed = seedFromNow();
     this.rng = mulberry32(seed);
-    this.world = new World(this.scene, mapId, seed, this.assets);
+    try {
+      this.world = new World(this.scene, mapId, seed, this.assets);
+    } catch (err) {
+      console.error('WORLD_BUILD_FAIL', err && err.stack || err);
+      this.state = 'menu';
+      throw err;
+    }
     this.effects = new Effects(this.scene);
 
     // 玩家出生点
@@ -647,6 +653,7 @@ class Game {
     // 每个高价值区域至少一名守卫，中价值区域半数有守卫
     for (const zone of zones) {
       if (!remaining.length) break;
+      if (zone.tier === 'low') continue;
       if (zone.tier !== 'high' && Math.random() > 0.5) continue;
       let idx = zone.tier === 'high' ? remaining.indexOf('raider') : -1;
       if (idx < 0) idx = remaining.findIndex((t) => t !== 'boss');

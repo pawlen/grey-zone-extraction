@@ -1,6 +1,6 @@
 {
   "name": "grey-zone-extraction",
-  "version": "1.13.0",
+  "version": "1.14.0",
   "description": "灰区行动 - 浏览器 3D 第一人称搜打撤游戏",
   "type": "module",
   "scripts": {
