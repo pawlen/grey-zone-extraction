@@ -1,0 +1,74 @@
+{
+  "_comment": "复制为 assets/manifest.json 后按需填写。所有字段均可省略，缺省时自动回退到程序化资产。",
+  "enemies": {
+    "scav": {
+      "model": "assets/models/enemy_scav.glb",
+      "targetHeight": 1.82,
+      "rotationY": 3.14159,
+      "weaponSocket": "mixamorig:RightHand",
+      "weaponScale": 0.42,
+      "weaponOffset": [0, 0.02, 0.05],
+      "weaponRotation": [0, 0, 0],
+      "tint": 15724402,
+      "tintStrength": 0.25,
+      "clips": {
+        "idle": "Idle",
+        "walk": "Walk",
+        "run": "Run",
+        "aim": "Aim",
+        "fire": "Fire",
+        "death": "Death"
+      }
+    },
+    "raider": {
+      "model": "assets/models/enemy_raider.glb",
+      "targetHeight": 1.86,
+      "rotationY": 3.14159,
+      "clips": {
+        "idle": "Idle",
+        "walk": "Walk",
+        "run": "Run",
+        "aim": "Aim",
+        "fire": "Fire",
+        "death": "Death"
+      }
+    }
+  },
+  "weapons": {
+    "w_ak74": {
+      "model": "assets/models/weapon_ak74.glb",
+      "position": [0.28, -0.26, -0.65],
+      "rotation": [0, 0, 0],
+      "scale": 1,
+      "muzzle": "muzzle",
+      "clips": {
+        "idle": "Idle",
+        "aim": "Aim",
+        "fire": "Fire",
+        "reload": "Reload"
+      }
+    }
+  },
+  "textureSets": {
+    "factory_wall": {
+      "albedo": "assets/textures/factory_wall_albedo.jpg",
+      "normal": "assets/textures/factory_wall_normal.jpg",
+      "roughness": "assets/textures/factory_wall_roughness.jpg",
+      "metalness": "assets/textures/factory_wall_metalness.jpg",
+      "ao": "assets/textures/factory_wall_ao.jpg",
+      "repeat": [2, 2],
+      "roughnessValue": 0.9,
+      "metalnessValue": 0.05
+    },
+    "factory_ground": {
+      "albedo": "assets/textures/factory_ground_albedo.jpg",
+      "normal": "assets/textures/factory_ground_normal.jpg",
+      "repeat": [24, 24]
+    },
+    "factory_rock": {
+      "albedo": "assets/textures/rock_albedo.jpg",
+      "normal": "assets/textures/rock_normal.jpg",
+      "repeat": [3, 3]
+    }
+  }
+}

@@ -1,0 +1,820 @@
+{
+  "_comment": "Blender 生成的骨骼角色资产；留空对应条目即回退程序化模型。",
+  "enemies": {
+    "scav": {
+      "model": "assets/models/enemy_scav.glb",
+      "targetHeight": 1.8,
+      "rotationY": 0,
+      "weaponSocket": "HandR",
+      "weaponScale": 0.9,
+      "weaponOffset": [
+        0,
+        0.02,
+        0.04
+      ],
+      "weaponRotation": [
+        1.4,
+        0,
+        0
+      ],
+      "clips": {
+        "idle": "Idle",
+        "walk": "Walk",
+        "run": "Run",
+        "aim": "Aim",
+        "fire": "Fire",
+        "death": "Death"
+      }
+    },
+    "raider": {
+      "model": "assets/models/enemy_raider.glb",
+      "targetHeight": 1.84,
+      "rotationY": 0,
+      "weaponSocket": "HandR",
+      "weaponScale": 0.9,
+      "weaponOffset": [
+        0,
+        0.02,
+        0.04
+      ],
+      "weaponRotation": [
+        1.4,
+        0,
+        0
+      ],
+      "clips": {
+        "idle": "Idle",
+        "walk": "Walk",
+        "run": "Run",
+        "aim": "Aim",
+        "fire": "Fire",
+        "death": "Death"
+      }
+    },
+    "boss": {
+      "model": "assets/models/enemy_boss.glb",
+      "targetHeight": 1.94,
+      "rotationY": 0,
+      "weaponSocket": "HandR",
+      "weaponScale": 0.9,
+      "weaponOffset": [
+        0,
+        0.02,
+        0.04
+      ],
+      "weaponRotation": [
+        1.4,
+        0,
+        0
+      ],
+      "clips": {
+        "idle": "Idle",
+        "walk": "Walk",
+        "run": "Run",
+        "aim": "Aim",
+        "fire": "Fire",
+        "death": "Death"
+      }
+    },
+    "operator": {
+      "model": "assets/models/operator.glb",
+      "targetHeight": 1.82,
+      "rotationY": 0,
+      "clips": {
+        "idle": "Idle",
+        "walk": "Walk",
+        "run": "Run",
+        "aim": "Aim",
+        "fire": "Fire",
+        "death": "Death"
+      }
+    },
+    "operator_hq": {
+      "model": "assets/models/character_vanguard.glb",
+      "targetHeight": 1.82,
+      "rotationY": 3.14159,
+      "clips": {
+        "idle": "Idle",
+        "walk": "Walk",
+        "run": "Run"
+      }
+    }
+  },
+  "weapons": {
+    "w_pm": {
+      "model": "assets/models/weapon_pm.glb",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        3.14159,
+        0
+      ],
+      "scale": 0.98,
+      "muzzle": "muzzle",
+      "clips": {
+        "idle": "Idle",
+        "aim": "Aim",
+        "fire": "Fire",
+        "reload": "Reload"
+      }
+    },
+    "w_m9": {
+      "model": "assets/models/weapon_m9.glb",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        3.14159,
+        0
+      ],
+      "scale": 0.95,
+      "muzzle": "muzzle",
+      "clips": {
+        "idle": "Idle",
+        "aim": "Aim",
+        "fire": "Fire",
+        "reload": "Reload"
+      }
+    },
+    "w_glock": {
+      "model": "assets/models/weapon_glock.glb",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        3.14159,
+        0
+      ],
+      "scale": 0.95,
+      "muzzle": "muzzle",
+      "clips": {
+        "idle": "Idle",
+        "aim": "Aim",
+        "fire": "Fire",
+        "reload": "Reload"
+      }
+    },
+    "w_deagle": {
+      "model": "assets/models/weapon_deagle.glb",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        3.14159,
+        0
+      ],
+      "scale": 0.85,
+      "muzzle": "muzzle",
+      "clips": {
+        "idle": "Idle",
+        "aim": "Aim",
+        "fire": "Fire",
+        "reload": "Reload"
+      }
+    },
+    "w_mp5": {
+      "model": "assets/models/weapon_mp5.glb",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        3.14159,
+        0
+      ],
+      "scale": 0.75,
+      "muzzle": "muzzle",
+      "clips": {
+        "idle": "Idle",
+        "aim": "Aim",
+        "fire": "Fire",
+        "reload": "Reload"
+      }
+    },
+    "w_uzi": {
+      "model": "assets/models/weapon_uzi.glb",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        3.14159,
+        0
+      ],
+      "scale": 0.78,
+      "muzzle": "muzzle",
+      "clips": {
+        "idle": "Idle",
+        "aim": "Aim",
+        "fire": "Fire",
+        "reload": "Reload"
+      }
+    },
+    "w_ump": {
+      "model": "assets/models/weapon_ump.glb",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        3.14159,
+        0
+      ],
+      "scale": 0.75,
+      "muzzle": "muzzle",
+      "clips": {
+        "idle": "Idle",
+        "aim": "Aim",
+        "fire": "Fire",
+        "reload": "Reload"
+      }
+    },
+    "w_pp19": {
+      "model": "assets/models/weapon_pp19.glb",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        3.14159,
+        0
+      ],
+      "scale": 0.75,
+      "muzzle": "muzzle",
+      "clips": {
+        "idle": "Idle",
+        "aim": "Aim",
+        "fire": "Fire",
+        "reload": "Reload"
+      }
+    },
+    "w_ak74": {
+      "model": "assets/models/weapon_ak74.glb",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        3.14159,
+        0
+      ],
+      "scale": 0.7,
+      "muzzle": "muzzle",
+      "clips": {
+        "idle": "Idle",
+        "aim": "Aim",
+        "fire": "Fire",
+        "reload": "Reload"
+      }
+    },
+    "w_m4": {
+      "model": "assets/models/weapon_m4.glb",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        3.14159,
+        0
+      ],
+      "scale": 0.7,
+      "muzzle": "muzzle",
+      "clips": {
+        "idle": "Idle",
+        "aim": "Aim",
+        "fire": "Fire",
+        "reload": "Reload"
+      }
+    },
+    "w_sks": {
+      "model": "assets/models/weapon_sks.glb",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        3.14159,
+        0
+      ],
+      "scale": 0.7,
+      "muzzle": "muzzle",
+      "clips": {
+        "idle": "Idle",
+        "aim": "Aim",
+        "fire": "Fire",
+        "reload": "Reload"
+      }
+    },
+    "w_mp153": {
+      "model": "assets/models/weapon_mp153.glb",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        3.14159,
+        0
+      ],
+      "scale": 0.68,
+      "muzzle": "muzzle",
+      "clips": {
+        "idle": "Idle",
+        "aim": "Aim",
+        "fire": "Fire",
+        "reload": "Reload"
+      }
+    },
+    "w_saiga": {
+      "model": "assets/models/weapon_saiga.glb",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        3.14159,
+        0
+      ],
+      "scale": 0.68,
+      "muzzle": "muzzle",
+      "clips": {
+        "idle": "Idle",
+        "aim": "Aim",
+        "fire": "Fire",
+        "reload": "Reload"
+      }
+    },
+    "w_mosin": {
+      "model": "assets/models/weapon_mosin.glb",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        3.14159,
+        0
+      ],
+      "scale": 0.6,
+      "muzzle": "muzzle",
+      "clips": {
+        "idle": "Idle",
+        "aim": "Aim",
+        "fire": "Fire",
+        "reload": "Reload"
+      }
+    },
+    "w_svd": {
+      "model": "assets/models/weapon_svd.glb",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        3.14159,
+        0
+      ],
+      "scale": 0.6,
+      "muzzle": "muzzle",
+      "clips": {
+        "idle": "Idle",
+        "aim": "Aim",
+        "fire": "Fire",
+        "reload": "Reload"
+      }
+    }
+  },
+  "textureSets": {
+    "factory_wall": {
+      "albedo": "assets/textures/concrete_wall_008_diff.jpg",
+      "normal": "assets/textures/concrete_wall_008_nor.jpg",
+      "roughness": "assets/textures/concrete_wall_008_rough.jpg",
+      "repeat": [
+        2,
+        2
+      ]
+    },
+    "factory_ground": {
+      "albedo": "assets/textures/concrete_floor_02_diff.jpg",
+      "normal": "assets/textures/concrete_floor_02_nor.jpg",
+      "roughness": "assets/textures/concrete_floor_02_rough.jpg",
+      "repeat": [
+        40,
+        40
+      ],
+      "roughnessValue": 0.95
+    },
+    "factory_rock": {
+      "albedo": "assets/textures/rock_face_03_diff.jpg",
+      "normal": "assets/textures/rock_face_03_nor.jpg",
+      "roughness": "assets/textures/rock_face_03_rough.jpg",
+      "repeat": [
+        3,
+        3
+      ]
+    },
+    "forest_wall": {
+      "albedo": "assets/textures/wood_planks_diff.jpg",
+      "normal": "assets/textures/wood_planks_nor.jpg",
+      "roughness": "assets/textures/wood_planks_rough.jpg",
+      "repeat": [
+        3,
+        2
+      ]
+    },
+    "forest_ground": {
+      "albedo": "assets/textures/forest_ground_05_diff.jpg",
+      "normal": "assets/textures/forest_ground_05_nor.jpg",
+      "roughness": "assets/textures/forest_ground_05_rough.jpg",
+      "repeat": [
+        40,
+        40
+      ],
+      "roughnessValue": 0.98
+    },
+    "forest_rock": {
+      "albedo": "assets/textures/rock_face_03_diff.jpg",
+      "normal": "assets/textures/rock_face_03_nor.jpg",
+      "roughness": "assets/textures/rock_face_03_rough.jpg",
+      "repeat": [
+        3,
+        3
+      ]
+    },
+    "port_wall": {
+      "albedo": "assets/textures/corrugated_iron_02_diff.jpg",
+      "normal": "assets/textures/corrugated_iron_02_nor.jpg",
+      "roughness": "assets/textures/corrugated_iron_02_rough.jpg",
+      "repeat": [
+        2,
+        2
+      ],
+      "metalnessValue": 0.45,
+      "roughnessValue": 0.6
+    },
+    "port_ground": {
+      "albedo": "assets/textures/asphalt_04_diff.jpg",
+      "normal": "assets/textures/asphalt_04_nor.jpg",
+      "roughness": "assets/textures/asphalt_04_rough.jpg",
+      "repeat": [
+        40,
+        40
+      ],
+      "roughnessValue": 0.95
+    },
+    "port_rock": {
+      "albedo": "assets/textures/concrete_wall_008_diff.jpg",
+      "normal": "assets/textures/concrete_wall_008_nor.jpg",
+      "roughness": "assets/textures/concrete_wall_008_rough.jpg",
+      "repeat": [
+        3,
+        3
+      ]
+    },
+    "snow_wall": {
+      "albedo": "assets/textures/concrete_wall_008_diff.jpg",
+      "normal": "assets/textures/concrete_wall_008_nor.jpg",
+      "roughness": "assets/textures/concrete_wall_008_rough.jpg",
+      "repeat": [
+        2,
+        2
+      ],
+      "color": 13621472
+    },
+    "snow_ground": {
+      "albedo": "assets/textures/snow_02_diff.jpg",
+      "normal": "assets/textures/snow_02_nor.jpg",
+      "roughness": "assets/textures/snow_02_rough.jpg",
+      "repeat": [
+        30,
+        30
+      ],
+      "roughnessValue": 0.9
+    },
+    "snow_rock": {
+      "albedo": "assets/textures/rock_face_03_diff.jpg",
+      "normal": "assets/textures/rock_face_03_nor.jpg",
+      "roughness": "assets/textures/rock_face_03_rough.jpg",
+      "repeat": [
+        3,
+        3
+      ],
+      "color": 14081766
+    },
+    "farm_wall": {
+      "albedo": "assets/textures/wood_planks_diff.jpg",
+      "normal": "assets/textures/wood_planks_nor.jpg",
+      "roughness": "assets/textures/wood_planks_rough.jpg",
+      "repeat": [
+        3,
+        2
+      ]
+    },
+    "farm_ground": {
+      "albedo": "assets/textures/grass_ground_diff.jpg",
+      "normal": "assets/textures/grass_ground_nor.jpg",
+      "roughness": "assets/textures/grass_ground_rough.jpg",
+      "repeat": [
+        40,
+        40
+      ],
+      "roughnessValue": 0.98
+    },
+    "farm_rock": {
+      "albedo": "assets/textures/rock_face_03_diff.jpg",
+      "normal": "assets/textures/rock_face_03_nor.jpg",
+      "roughness": "assets/textures/rock_face_03_rough.jpg",
+      "repeat": [
+        3,
+        3
+      ]
+    },
+    "city_wall": {
+      "albedo": "assets/textures/brick_4_diff.jpg",
+      "normal": "assets/textures/brick_4_nor.jpg",
+      "roughness": "assets/textures/brick_4_rough.jpg",
+      "repeat": [
+        3,
+        3
+      ]
+    },
+    "city_ground": {
+      "albedo": "assets/textures/asphalt_04_diff.jpg",
+      "normal": "assets/textures/asphalt_04_nor.jpg",
+      "roughness": "assets/textures/asphalt_04_rough.jpg",
+      "repeat": [
+        40,
+        40
+      ],
+      "roughnessValue": 0.95
+    },
+    "city_rock": {
+      "albedo": "assets/textures/concrete_wall_008_diff.jpg",
+      "normal": "assets/textures/concrete_wall_008_nor.jpg",
+      "roughness": "assets/textures/concrete_wall_008_rough.jpg",
+      "repeat": [
+        3,
+        3
+      ]
+    }
+  },
+  "gear": {
+    "helm_ssh68": {
+      "model": "assets/models/gear_helm_ssh68.glb",
+      "slot": "helmet",
+      "attach": "Head",
+      "offset": [
+        0,
+        0.14,
+        0
+      ],
+      "scale": 1
+    },
+    "helm_pasgt": {
+      "model": "assets/models/gear_helm_pasgt.glb",
+      "slot": "helmet",
+      "attach": "Head",
+      "offset": [
+        0,
+        0.14,
+        0
+      ],
+      "scale": 1
+    },
+    "helm_6b47": {
+      "model": "assets/models/gear_helm_6b47.glb",
+      "slot": "helmet",
+      "attach": "Head",
+      "offset": [
+        0,
+        0.14,
+        0
+      ],
+      "scale": 1
+    },
+    "helm_ulach": {
+      "model": "assets/models/gear_helm_ulach.glb",
+      "slot": "helmet",
+      "attach": "Head",
+      "offset": [
+        0,
+        0.14,
+        0
+      ],
+      "scale": 1
+    },
+    "helm_altyn": {
+      "model": "assets/models/gear_helm_altyn.glb",
+      "slot": "helmet",
+      "attach": "Head",
+      "offset": [
+        0,
+        0.14,
+        0
+      ],
+      "scale": 1
+    },
+    "armor_paca": {
+      "model": "assets/models/gear_armor_paca.glb",
+      "slot": "armor",
+      "attach": "Chest",
+      "offset": [
+        0,
+        0.07,
+        0
+      ],
+      "scale": 1
+    },
+    "armor_6b2": {
+      "model": "assets/models/gear_armor_6b2.glb",
+      "slot": "armor",
+      "attach": "Chest",
+      "offset": [
+        0,
+        0.07,
+        0
+      ],
+      "scale": 1
+    },
+    "armor_6b23": {
+      "model": "assets/models/gear_armor_6b23.glb",
+      "slot": "armor",
+      "attach": "Chest",
+      "offset": [
+        0,
+        0.07,
+        0
+      ],
+      "scale": 1
+    },
+    "armor_6b43": {
+      "model": "assets/models/gear_armor_6b43.glb",
+      "slot": "armor",
+      "attach": "Chest",
+      "offset": [
+        0,
+        0.07,
+        0
+      ],
+      "scale": 1
+    },
+    "armor_korund": {
+      "model": "assets/models/gear_armor_korund.glb",
+      "slot": "armor",
+      "attach": "Chest",
+      "offset": [
+        0,
+        0.07,
+        0
+      ],
+      "scale": 1
+    },
+    "armor_slick": {
+      "model": "assets/models/gear_armor_slick.glb",
+      "slot": "armor",
+      "attach": "Chest",
+      "offset": [
+        0,
+        0.07,
+        0
+      ],
+      "scale": 1
+    },
+    "armor_fort": {
+      "model": "assets/models/gear_armor_fort.glb",
+      "slot": "armor",
+      "attach": "Chest",
+      "offset": [
+        0,
+        0.07,
+        0
+      ],
+      "scale": 1
+    },
+    "rig_small": {
+      "model": "assets/models/gear_rig_small.glb",
+      "slot": "rig",
+      "attach": "Chest",
+      "offset": [
+        0,
+        0.07,
+        0
+      ],
+      "scale": 1
+    },
+    "rig_tactical": {
+      "model": "assets/models/gear_rig_tactical.glb",
+      "slot": "rig",
+      "attach": "Chest",
+      "offset": [
+        0,
+        0.07,
+        0
+      ],
+      "scale": 1
+    },
+    "rig_assault": {
+      "model": "assets/models/gear_rig_assault.glb",
+      "slot": "rig",
+      "attach": "Chest",
+      "offset": [
+        0,
+        0.07,
+        0
+      ],
+      "scale": 1
+    },
+    "bag_small": {
+      "model": "assets/models/gear_bag_small.glb",
+      "slot": "backpack",
+      "attach": "Chest",
+      "offset": [
+        0,
+        0.07,
+        0.08
+      ],
+      "scale": 1
+    },
+    "bag_tactical": {
+      "model": "assets/models/gear_bag_tactical.glb",
+      "slot": "backpack",
+      "attach": "Chest",
+      "offset": [
+        0,
+        0.07,
+        0.08
+      ],
+      "scale": 1
+    },
+    "bag_expedition": {
+      "model": "assets/models/gear_bag_expedition.glb",
+      "slot": "backpack",
+      "attach": "Chest",
+      "offset": [
+        0,
+        0.07,
+        0.08
+      ],
+      "scale": 1
+    }
+  },
+  "props": {
+    "crate": {
+      "model": "assets/models/prop_crate.glb"
+    },
+    "toolbox": {
+      "model": "assets/models/prop_toolbox.glb"
+    },
+    "weapon_box": {
+      "model": "assets/models/prop_weapon_box.glb"
+    },
+    "med_box": {
+      "model": "assets/models/prop_med_box.glb"
+    },
+    "safe": {
+      "model": "assets/models/prop_safe.glb"
+    },
+    "locker": {
+      "model": "assets/models/prop_locker.glb"
+    },
+    "duffle": {
+      "model": "assets/models/prop_duffle.glb"
+    },
+    "ammo_crate": {
+      "model": "assets/models/prop_ammo_crate.glb"
+    }
+  }
+}

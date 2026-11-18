@@ -1,0 +1,14 @@
+node_modules/
+dist/
+grey-zone-web.zip
+e2e-result.txt
+tools/__pycache__/
+tools/blender/__pycache__/
+shots/blender/
+.claude/
+.DS_Store
+Thumbs.db
+
+tools/_*.ps1
+tools/_*.py
+tools/_*.mjs

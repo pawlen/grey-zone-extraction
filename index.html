@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>灰区行动 · GREY ZONE EXTRACTION</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%230b0e11'/%3E%3Ctext x='32' y='43' font-size='26' font-family='monospace' font-weight='bold' fill='%23c9a24d' text-anchor='middle'%3EGZ%3C/text%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="css/style.css" />
+  <script type="importmap">
+    { "imports": { "three": "./vendor/three.module.min.js" } }
+  </script>
+</head>
+<body>
+  <div id="app">
+    <canvas id="game"></canvas>
+
+    <div id="loading-screen">
+      <div class="loading-inner">
+        <div class="loading-mark">GZ</div>
+        <h2>灰区行动</h2>
+        <p class="loading-sub">GREY ZONE · EXTRACTION</p>
+        <div class="loading-bar"><div id="loadingFill"></div></div>
+        <p id="loadingLabel" class="loading-label">正在准备灰区…</p>
+      </div>
+    </div>
+
+    <!-- ═══════════ 战局 HUD ═══════════ -->
+    <div id="hud" class="hidden">
+      <div id="compass" class="compass">
+        <div id="compassTicks" class="compass-ticks"></div>
+        <div id="compassMarks" class="compass-marks"></div>
+        <div class="compass-frame"></div>
+        <div class="compass-center"></div>
+        <div id="compassHeading" class="compass-heading">000°</div>
+      </div>
+
+      <div class="raid-top">
+        <div id="mapLabel" class="raid-map">未知区域</div>
+        <div id="raidTimer" class="raid-timer">00:00</div>
+      </div>
+
+      <div id="crosshair" class="crosshair">
+        <i class="ch ch-t"></i><i class="ch ch-b"></i><i class="ch ch-l"></i><i class="ch ch-r"></i><i class="ch-dot"></i>
+      </div>
+      <div id="hitmarker" class="hitmarker">✕</div>
+
+      <div id="interactPrompt" class="interact-prompt hidden"></div>
+      <div id="extractBar" class="progress-bar extract-bar hidden">
+        <div class="bar-fill" id="extractFill"></div>
+        <span id="extractText">撤离中</span>
+      </div>
+      <div id="medBar" class="progress-bar med-bar hidden">
+        <div class="bar-fill" id="medFill"></div>
+        <span id="medText">使用中</span>
+      </div>
+
+      <div class="vitals">
+        <div class="body-parts" id="bodyParts">
+          <div class="part" id="part-head" title="头部">头</div>
+          <div class="part" id="part-armL" title="左臂">左臂</div>
+          <div class="part" id="part-thorax" title="胸部">胸</div>
+          <div class="part" id="part-armR" title="右臂">右臂</div>
+          <div class="part" id="part-stomach" title="腹部">腹</div>
+          <div class="part" id="part-legL" title="左腿">左腿</div>
+          <div class="part" id="part-legR" title="右腿">右腿</div>
+        </div>
+        <div class="status-bars">
+          <div class="mini-bar stamina"><div id="staminaFill"></div><span>体力</span></div>
+          <div class="bleed-indicator hidden" id="bleedIndicator">● 流血</div>
+        </div>
+      </div>
+
+      <div id="log" class="event-log"></div>
+
+      <div class="ammo-panel">
+        <div id="weaponName" class="weapon-name">—</div>
+        <div class="ammo-line"><span id="ammoCount">0</span><span class="slash">/</span><span id="ammoReserve">0</span></div>
+        <div class="ammo-sub"><span id="fireMode">—</span><span id="reloadHint" class="reload-hint"></span></div>
+      </div>
+
+      <div id="quickSlots" class="quick-slots"></div>
+      <div id="weightPanel" class="weight-panel"><span id="weightText">0.0 / 22 kg</span></div>
+      <div id="extractHint" class="extract-hint"></div>
+    </div>
+
+    <!-- ═══════════ 全屏覆盖层 ═══════════ -->
+    <div id="vignette"></div>
+    <div id="damageFlash"></div>
+    <div id="scope" class="hidden"><i class="scope-h"></i><i class="scope-v"></i></div>
+
+    <div id="screens">
+      <section id="screen-menu" class="screen"></section>
+      <section id="screen-prep" class="screen hidden"></section>
+      <section id="screen-trader" class="screen hidden"></section>
+      <section id="screen-result" class="screen hidden"></section>
+    </div>
+
+    <div id="overlay-loot" class="overlay hidden"></div>
+    <div id="overlay-inventory" class="overlay hidden"></div>
+    <div id="overlay-help" class="overlay hidden"></div>
+    <div id="overlay-announcement" class="overlay hidden"></div>
+    <div id="overlay-pause" class="overlay hidden"></div>
+    <div id="overlay-click" class="overlay hidden"><div class="click-inner"><div class="click-icon">⌖</div><h3>点击继续行动</h3><p>锁定鼠标以恢复控制</p></div></div>
+
+    <div id="toast-wrap"></div>
+    <div id="boot-error" class="hidden"></div>
+  </div>
+
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>
