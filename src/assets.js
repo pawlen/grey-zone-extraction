@@ -102,9 +102,9 @@ export class MaterialLibrary {
   }
 
   /** 载入一组 PBR 贴图，返回可直接使用的 MeshStandardMaterial。 */
-  async loadTextureSet(name) {
+  async loadTextureSet(name, cfgOverride = null) {
     if (this.materials.has(name)) return this.materials.get(name);
-    const cfg = (ASSET_MANIFEST.textureSets || {})[name];
+    const cfg = cfgOverride || (ASSET_MANIFEST.textureSets || {})[name];
     if (!cfg) return null;
     const [albedo, normal, roughness, metalness, ao, emissive] = await Promise.all([
       this.loadTexture(cfg.albedo, { color: true }),
@@ -327,7 +327,10 @@ export class AssetManager {
     const setNames = Object.keys(this.manifest.textureSets || {});
     let loadedSets = 0;
     for (const name of setNames) {
-      try { await this.materials.loadTextureSet(name); } catch (e) { console.warn('[材质] 贴图组加载失败：', name, e); }
+      try {
+        const cfg = (this.manifest.textureSets || {})[name];
+        await this.materials.loadTextureSet(name, cfg);
+      } catch (e) { console.warn('[材质] 贴图组加载失败：', name, e); }
       loadedSets++;
       onProgress(0.88 + 0.1 * (loadedSets / Math.max(1, setNames.length)), `加载 PBR 材质 ${loadedSets}/${setNames.length}`);
     }
